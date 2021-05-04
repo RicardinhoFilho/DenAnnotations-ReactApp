@@ -1,18 +1,23 @@
 import Login from "./Pages/Login";
 import Repositories from "./Pages/Repositories";
 import Notes from "./Pages/Notes";
-import {Example} from "./Pages/teste";
+import SingUp from "./Pages/SingUp";
+import  UpdateAccount from "./Pages/updateAccount";
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Header from "./Components/Header";
-
 function App() {
   return (
     <div className="App">
       <Router>
         <Switch>
         <Route exact path="/login">
-          <Example />
+          <Login />
+        </Route>
+        <Route exact path="/singup">
+          <SingUp />
+        </Route>
+        <Route exact path="/updateAccount">
+          <UpdateAccount />
         </Route>
         <Route exact path="/repositories">
           <Repositories />
@@ -20,6 +25,7 @@ function App() {
         <Route  path="/notes/:id">
           <Notes />
         </Route>
+       
       </Switch>
       </Router>
     </div>

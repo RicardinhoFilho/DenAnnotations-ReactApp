@@ -12,20 +12,22 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     textAlign: "center",
     justifyContent: "right",
-    position:"relative",
-    maxHeight:200,
-    
+    display:"block"
   },
 
   paper: {
-    maxWidth: 1000,
-    marginBottom:"scrollBarHeight",
+    maxWidth:1000,
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     margin: "auto",
-    marginTop: "5vw",
+    marginTop: "8vw",
+    overflowY: "initial"
+  },
+  form:{
+    maxHeight: "30vw",
+    overflowY: "auto"
   },
   button: {
     backgroundColor: "#FFFF00",
@@ -34,10 +36,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#FFFF00",
       opacity: "1",
     },
-  },
-  editor:{
-    width: "100px",
-    height: "10px"
   }
 }));
 
@@ -67,8 +65,8 @@ export default function UpdateNote({ option, note, setModalUpdate}) {
       setContent((note.annotation))
     }
   });
-  const handleSubmit = () => {
-    api.patch(`/api/note/${note.id}`, { title, description, annotation });
+  const handleSubmit = async() => {
+    await api.patch(`/api/note/${note.id}`, { title, description, annotation });
   };
 
   const handleClose = () => {
@@ -77,13 +75,13 @@ export default function UpdateNote({ option, note, setModalUpdate}) {
   };
 
   return (
-    
+    <>
     <Modal open={open} onClose={handleClose} className={classes.modal} disableScrollLock={true}>
       <div className={classes.paper}>
         <Typography variant="h6" align="center" id="title">
           Editar Repositório!
         </Typography>
-        <form
+        <form className={classes.form}
           onSubmit={(event) => {
             if (
               titleError.isValid != false &&
@@ -139,7 +137,7 @@ export default function UpdateNote({ option, note, setModalUpdate}) {
             ref={editor}
             value={content}
             config={config}
-            tabIndex={-1} // tabIndex of textarea
+            tabIndex={0} // tabIndex of textarea
             onBlur={(newContent) => setAnnotation(newContent)} // preferred to use only this option to update the content for performance reasons
             className={classes.editor}
           />
@@ -160,6 +158,6 @@ export default function UpdateNote({ option, note, setModalUpdate}) {
      
       
     </Modal>
-    
+    </>
   );
 }

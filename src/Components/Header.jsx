@@ -7,6 +7,8 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import {Link} from "react-router-dom";
+import brokenToken  from "../Services/brokenToken"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,6 +63,10 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  link:{
+    textDecoration:"none",
+    color:"inherit"
+  }
 }));
 
 export default function Header() {
@@ -73,6 +79,21 @@ export default function Header() {
           <Typography className={classes.title} variant="h6" noWrap>
             DevAnnotations
           </Typography>
+          
+          <Typography className={classes.title} variant="h7" noWrap>
+          <Link className={classes.link} to="/repositories">Repositórios</Link>
+          </Typography>
+
+          <Typography className={classes.title} variant="h7" noWrap>
+          <Link className={classes.link} to="/login" onClick={
+            brokenToken
+          }>Sair</Link>
+          </Typography>
+
+          <Typography className={classes.title} variant="h7" noWrap>
+          <Link className={classes.link} to="/updateAccount">Minha Conta</Link>
+          </Typography>
+          
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />

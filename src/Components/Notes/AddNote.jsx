@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     textAlign: "center",
     justifyContent: "right",
+    display:"block"
   },
 
   paper: {
@@ -23,8 +24,13 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     margin: "auto",
-    marginTop: "5vw",
+    marginTop: "8vw",
+    overflowY: "initial"
   },
+  form:{
+    maxHeight: "30vw",
+    overflowY: "auto"
+  }
 }));
 
 export default function AddNote({ option, setModalAdd, repId }) {
@@ -71,7 +77,8 @@ const handleSubmit=()=>{
         <Typography variant="h6" align="center" id="title">
           Adicionar Repositório!
         </Typography>
-        <form onSubmit={(event)=>{
+        <form  className={classes.form}
+        onSubmit={(event)=>{
             if (
               checkTitle(title).isValid == true &&
               checkDescription(description).isValid == true && annotation.length > 0

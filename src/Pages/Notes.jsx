@@ -7,8 +7,9 @@ import trashImage from "../Assets/Trash.svg";
 import editImage from "../Assets/Edit.svg";
 
 import DeleteNote from "../Components/Notes/DeleteNote";
-import AddNote from "../Components/Notes/AddNote"
-import UpdateNote from "../Components/Notes/UpdateNote"
+import AddNote from "../Components/Notes/AddNote";
+import UpdateNote from "../Components/Notes/UpdateNote";
+import Note from "../Components/Notes/Note";
 
 import {
   makeStyles,
@@ -55,33 +56,39 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Notes = () => {
-
-
   const { id } = useParams();
   const [notes, setNotes] = useState([]);
   const [note, setNote] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDescription, setShowDescription] = useState(false);
-  const[modalDelete,setModalDelete] = useState(false);
-  const[modalAdd,setModalAdd] = useState(false)
-  const[modalUpdate,setModalUpdate] = useState(false)
-  
+  const [modalDelete, setModalDelete] = useState(false);
+  const [modalAdd, setModalAdd] = useState(false);
+  const [modalUpdate, setModalUpdate] = useState(false);
+  const [modalOpenDetail, setOpenNoteDetails] = useState(false);
+
   function handleShowDescription() {
     setShowDescription(!showDescription);
   }
 
-  function handleModalDelete(id, title, description,annotation) {
-    setNote({ id,title,description,annotation });
+  function handleModalDelete(id, title, description, annotation) {
+    setNote({ id, title, description, annotation });
+
     setModalDelete(true);
+    setOpenNoteDetails(false);
   }
 
   function handleModalAddOpen() {
     setModalAdd(true);
   }
 
-  function handleModalUpdate(id, title, description,annotation) {
-    setNote({id, title , description,annotation });
+  function handleModalUpdate(id, title, description, annotation) {
+    setNote({ id, title, description, annotation });
     setModalUpdate(true);
+  }
+
+  function handleOpenNoteDetails(id, title, description, annotation) {
+    setNote({ id, title, description, annotation });
+    setOpenNoteDetails(true);
   }
 
   const classes = useStyles();
@@ -116,11 +123,11 @@ const Notes = () => {
 
   return (
     <>
-     <UpdateNote
+      <UpdateNote
         option={modalUpdate}
         note={note}
         setModalUpdate={setModalUpdate}
-      />  
+      />
       <Header />
       <div className={classes.root}>
         <Typography
@@ -155,7 +162,17 @@ const Notes = () => {
         </div>
         <List className={classes.list}>
           {notes.map((item) => (
-            <Link className={classes.link} to={`/notes/${item.id}`}>
+            <Link
+              className={classes.link}
+              onClick={() => {
+                handleOpenNoteDetails(
+                  item.id,
+                  item.title,
+                  item.description,
+                  item.annotation
+                );
+              }}
+            >
               <ListItemLink key={item.id} className={classes.item}>
                 <Typography
                   variant="h4"
@@ -167,7 +184,12 @@ const Notes = () => {
                 <Button
                   primary
                   onClick={(event) => {
-                     handleModalDelete(item.id, item.title, item.description,item.annotation);
+                    handleModalDelete(
+                      item.id,
+                      item.title,
+                      item.description,
+                      item.annotation
+                    );
                     event.preventDefault();
                   }}
                 >
@@ -176,7 +198,12 @@ const Notes = () => {
                 <Button
                   primary
                   onClick={(event) => {
-                     handleModalUpdate(item.id, item.title, item.description, item.annotation);
+                    handleModalUpdate(
+                      item.id,
+                      item.title,
+                      item.description,
+                      item.annotation
+                    );
                     event.preventDefault();
                   }}
                 >
@@ -194,15 +221,22 @@ const Notes = () => {
           ))}
         </List>
         <DeleteNote
-        option={modalDelete}
-        note={note}
-        setModalDelete={setModalDelete}
-      />
-        
-         <AddNote option={modalAdd} setModalAdd={setModalAdd} repId={id} />
-     
-       
+          option={modalDelete}
+          note={note}
+          setModalDelete={setModalDelete}
+        />
+
+        <AddNote option={modalAdd} setModalAdd={setModalAdd} repId={id} />
       </div>
+
+      <Note
+        option={modalOpenDetail}
+        note={note}
+        setOpenNoteDetails={setOpenNoteDetails}
+        setModalAdd={setModalAdd}
+        setModalDelete={setModalDelete}
+        setModalUpdate={setModalUpdate}
+      />
      
     </>
   );

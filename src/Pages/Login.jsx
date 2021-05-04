@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, Typography, TextField, Button, makeStyles } from "@material-ui/core";
 import api from "../Services/api";
 import Header from "../Components/Header";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,6 +22,10 @@ const useStyles = makeStyles((theme) => ({
   },
   negativeFeedback:{
     color:"#ff6961",
+  },
+  link:{
+    marginLeft:"2vw",
+    textDecoration:"none"
   }
  
 }));
@@ -48,26 +53,7 @@ const Login = () => {
   }
   };
 
-  // function handleShowDescription() {
-  //   setShowDescription(!showDescription);
-  // }
-  // function handleModalDelete(id, title, description) {
-  //   setRep({ id: [id], title: [title], description: [description] });
-  //   setModalDelete(true);
-  // }
-
-  // function handleModalUpdate(id, title, description) {
-  //   setRep({ id: [id], title: [title], description: [description] });
-  //   setModalUpdate(true);
-  // }
-
-  // function handleModalAddOpen() {
-  //   setModalAdd(true);
-  // }
-
-  // function ListItemLink(props) {
-  //   return <ListItem button component="a" {...props} />;
-  // }
+  
   const classes = useStyles();
 
   return (
@@ -105,6 +91,11 @@ const Login = () => {
         <Button type="submit" variant="contained" color="primary" className={styles.button}>
           Entrar
         </Button>
+        <Link to="/singUp" className={classes.link}>
+        <Button type="submit" variant="contained" color="primary" className={styles.button}>
+          Não posssuo conta
+        </Button>
+        </Link>
       </form>
    </>
   );
