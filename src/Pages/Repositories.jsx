@@ -14,6 +14,7 @@ import AddRepository from "../Components/Repositories/AddRepository";
 import DeleteRepository from "../Components/Repositories/DeleteRepository";
 import UpdateRepository from "../Components/Repositories/UpdateRepository";
 
+import Header from "../Components/Header";
 import { Link } from "react-router-dom";
 import plusImage from "../Assets/Plus.svg";
 import trashImage from "../Assets/Trash.svg";
@@ -88,7 +89,6 @@ const Repositories = () => {
       if (token) {
         api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
         const result = await api.get("/api/repositories");
-        console.log(result.data);
         setData(result.data);
       }
     }
@@ -103,7 +103,10 @@ const Repositories = () => {
   }
 
   return (
+    <>
+    <Header/>
     <div className={classes.root}>
+       
       <Typography
         variant="h5"
         component="h2"
@@ -136,7 +139,7 @@ const Repositories = () => {
       </div>
       <List className={classes.list}>
         {data.map((item) => (
-          <Link className={classes.link} to={`/note/${item.id}`}>
+          <Link className={classes.link} to={`/notes/${item.id}`}>
             <ListItemLink key={item.id} className={classes.item}>
               <Typography variant="h4" component="h2" className={classes.title}>
                 {item.title}
@@ -182,6 +185,7 @@ const Repositories = () => {
         setModalUpdate={setModalUpdate}
       />
     </div>
+    </>
   );
 };
 

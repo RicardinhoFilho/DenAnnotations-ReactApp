@@ -70,10 +70,9 @@ export default function UpdateRepository({ option, rep, setModalUpdate }) {
         </Typography>
         <form
           onSubmit={(event) => {
-              
             if (
-              titleError != false &&
-             descriptionError != false
+              titleError.isValid != false &&
+             descriptionError.isValid != false
             ) {
               handleSubmit();
             } else {

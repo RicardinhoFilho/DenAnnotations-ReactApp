@@ -5,7 +5,7 @@ import checkTitle from "../../Utils/CheckTitle";
 import api from "../../Services/api";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Modal, TextField, Typography, Button } from "@material-ui/core";
+import { Modal, TextField, Typography, Button,TextareaAutosize } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -24,13 +24,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddRepository({ option, setModalAdd }) {
+export default function AddNote({ option, setModalAdd, repId }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [titleError, setTitleError] = useState([{ error: true }]);
   const [descriptionError, setDescriptionError] = useState([]);
+  const [annotation, setAnnotation] = useState("");
+  const [annotationError, setAnnotationError] = useState([]);
 
   useEffect(() => {
     if (open != option) {
@@ -38,7 +40,7 @@ export default function AddRepository({ option, setModalAdd }) {
     }
   });
 const handleSubmit=()=>{
-    api.post("/api/repositories", {title, description});
+    api.post(`/api/notes/${repId}`, {title, description,annotation});
 }
 
   const handleClose = () => {
@@ -94,6 +96,25 @@ const handleSubmit=()=>{
               setDescription(event.target.value);
             }}
           />
+        <br/>
+        <TextareaAutosize
+            label="Anotação"
+            margin="normal"
+            
+            type="textarea"
+            value={annotation}
+            onBlur={(event) => {
+              const isValid = checkDescription(annotation);
+
+              setAnnotationError(isValid);
+            }}
+            error={annotationError.error}
+            helperText={annotationError.msg}
+            onChange={(event) => {
+              setAnnotation(event.target.value);
+            }}
+          />
+
           <br /><br /> 
           <Button type="submit" variant="contained" color="primary" id="button">
             Confirmar
