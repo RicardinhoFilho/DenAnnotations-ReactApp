@@ -9,6 +9,11 @@ import {
   Switch,
   FormControlLabel,
 } from "@material-ui/core";
+
+import AddRepository from "../Components/Repositories/AddRepository";
+import DeleteRepository from "../Components/Repositories/DeleteRepository";
+import UpdateRepository from "../Components/Repositories/UpdateRepository";
+
 import { Link } from "react-router-dom";
 import plusImage from "../Assets/Plus.svg";
 import trashImage from "../Assets/Trash.svg";
@@ -19,6 +24,10 @@ const Repositories = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [showDescription, setShowDescription] = useState(false);
+  const [modalAdd, setModalAdd] = useState(false);
+  const [modalDelete, setModalDelete] = useState(false);
+  const [modalUpdate, setModalUpdate] = useState(false);
+  const [rep, setRep] = useState([]);
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,6 +63,19 @@ const Repositories = () => {
   function handleShowDescription() {
     setShowDescription(!showDescription);
   }
+  function handleModalDelete(id, title, description) {
+    setRep({ id: [id], title: [title], description: [description] });
+    setModalDelete(true);
+  }
+
+  function handleModalUpdate(id, title, description) {
+    setRep({ id: [id], title: [title], description: [description] });
+    setModalUpdate(true);
+  }
+
+  function handleModalAddOpen() {
+    setModalAdd(true);
+  }
 
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
@@ -65,7 +87,6 @@ const Repositories = () => {
     async function getData() {
       if (token) {
         api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-        //setAuthenticated(true);
         const result = await api.get("/api/repositories");
         console.log(result.data);
         setData(result.data);
@@ -94,7 +115,8 @@ const Repositories = () => {
 
       <div className={classes.firstButtons}>
         <FormControlLabel
-        label="Adicionar"
+          label="Adicionar"
+          onClick={() => handleModalAddOpen()}
           control={
             <Button primary>
               <img src={plusImage} className={classes.plus} />
@@ -119,15 +141,23 @@ const Repositories = () => {
               <Typography variant="h4" component="h2" className={classes.title}>
                 {item.title}
               </Typography>
-              <Button primary onClick={(event)=>{
+              <Button
+                primary
+                onClick={(event) => {
+                  handleModalDelete(item.id, item.title, item.description);
                   event.preventDefault();
-              }}>
+                }}
+              >
                 <img src={trashImage} className={classes.trash} />
               </Button>
-              <Button primary onClick={(event)=>{
+              <Button
+                primary
+                onClick={(event) => {
+                  handleModalUpdate(item.id, item.title, item.description);
                   event.preventDefault();
-              }}>
-                <img src={editImage} className={classes.trash} />
+                }}
+              >
+                <img src={editImage} className={classes.edit} />
               </Button>
             </ListItemLink>
             {showDescription ? (
@@ -140,6 +170,17 @@ const Repositories = () => {
           </Link>
         ))}
       </List>
+      <AddRepository option={modalAdd} setModalAdd={setModalAdd} />
+      <DeleteRepository
+        option={modalDelete}
+        rep={rep}
+        setModalDelete={setModalDelete}
+      />
+      <UpdateRepository
+        option={modalUpdate}
+        rep={rep}
+        setModalUpdate={setModalUpdate}
+      />
     </div>
   );
 };
