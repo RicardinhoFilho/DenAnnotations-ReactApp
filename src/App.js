@@ -1,6 +1,7 @@
 import Login from "./Pages/Login";
 import Repositories from "./Pages/Repositories";
 import Notes from "./Pages/Notes";
+import {Example} from "./Pages/teste";
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "./Components/Header";
@@ -11,7 +12,7 @@ function App() {
       <Router>
         <Switch>
         <Route exact path="/login">
-          <Login />
+          <Example />
         </Route>
         <Route exact path="/repositories">
           <Repositories />

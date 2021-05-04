@@ -82,6 +82,7 @@ const handleSubmit=()=>{
           <TextField
             label="Descrição"
             margin="normal"
+            aria-label="empty textarea"
             value={description}
             onBlur={(event) => {
               const isValid = checkDescription(description);

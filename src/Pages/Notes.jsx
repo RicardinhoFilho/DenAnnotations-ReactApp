@@ -8,6 +8,7 @@ import editImage from "../Assets/Edit.svg";
 
 import DeleteNote from "../Components/Notes/DeleteNote";
 import AddNote from "../Components/Notes/AddNote"
+import UpdateNote from "../Components/Notes/UpdateNote"
 
 import {
   makeStyles,
@@ -54,6 +55,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Notes = () => {
+
+
   const { id } = useParams();
   const [notes, setNotes] = useState([]);
   const [note, setNote] = useState([]);
@@ -61,18 +64,24 @@ const Notes = () => {
   const [showDescription, setShowDescription] = useState(false);
   const[modalDelete,setModalDelete] = useState(false);
   const[modalAdd,setModalAdd] = useState(false)
-
+  const[modalUpdate,setModalUpdate] = useState(false)
+  
   function handleShowDescription() {
     setShowDescription(!showDescription);
   }
 
   function handleModalDelete(id, title, description,annotation) {
-    setNote({ id: [id], title: [title], description: [description], annotation:[annotation] });
+    setNote({ id,title,description,annotation });
     setModalDelete(true);
   }
 
   function handleModalAddOpen() {
     setModalAdd(true);
+  }
+
+  function handleModalUpdate(id, title, description,annotation) {
+    setNote({id, title , description,annotation });
+    setModalUpdate(true);
   }
 
   const classes = useStyles();
@@ -107,6 +116,11 @@ const Notes = () => {
 
   return (
     <>
+     <UpdateNote
+        option={modalUpdate}
+        note={note}
+        setModalUpdate={setModalUpdate}
+      />  
       <Header />
       <div className={classes.root}>
         <Typography
@@ -162,7 +176,7 @@ const Notes = () => {
                 <Button
                   primary
                   onClick={(event) => {
-                    // handleModalUpdate(item.id, item.title, item.description);
+                     handleModalUpdate(item.id, item.title, item.description, item.annotation);
                     event.preventDefault();
                   }}
                 >
@@ -187,12 +201,9 @@ const Notes = () => {
         
          <AddNote option={modalAdd} setModalAdd={setModalAdd} repId={id} />
      
-      {/* <UpdateRepository
-        option={modalUpdate}
-        rep={rep}
-        setModalUpdate={setModalUpdate}
-      />  */}
+       
       </div>
+     
     </>
   );
 };
