@@ -45,10 +45,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function FullScreenDialog({
   option,
   note,
-  setOpenNoteDetails,
-  setModalAdd,
+  setModalOpenDetails,
   setModalUpdate,
-  setModalDelete,
+  setModalDelete
 }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -59,7 +58,8 @@ export default function FullScreenDialog({
 
   const handleClose = () => {
     setOpen(false);
-    setOpenNoteDetails(false);
+    setModalOpenDetails(false);
+    
   };
 
   useEffect(() => {
@@ -87,18 +87,14 @@ export default function FullScreenDialog({
             <Typography variant="h6" className={classes.title}>
               {note.title}
             </Typography>
-            <Button onClick={handleClose}  onClick={() => {
+            <Button  onClick={() => {
                 setModalUpdate(true)
               }}>
               <img src={editImage} className={classes.imageButtons} />
             </Button>
-            <Button
-              autoFocus
-              color="inherit"
-              onClick={() => {
+            <Button  onClick={() => {
                 setModalDelete(true)
-              }}
-            >
+              }}>
               <img src={trashImage} className={classes.imageButtons} />
             </Button>
           </Toolbar>

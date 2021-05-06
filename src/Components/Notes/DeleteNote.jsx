@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     marginTop: "15vw",
   },
+  negativeFeedback:{
+    color:"#ff6961"
+  },
 }));
 
 export default function DeleteRepository({ option, note, setModalDelete }) {
@@ -29,14 +32,16 @@ export default function DeleteRepository({ option, note, setModalDelete }) {
     if (open != option) {
       setOpen(option);
     }
+
+    console.log("option:" , option)
   });
 const handleSubmit=()=>{
     api.delete(`/api/note/${note.id}`);
 }
 
   const handleClose = () => {
-    setOpen(false);
     setModalDelete(false);
+    setOpen(false);
   };
 
   return (
@@ -67,7 +72,7 @@ const handleSubmit=()=>{
             value={note.annotation}
             />
           <br/><br/>
-          <Typography variant="h7" align="center" id="title">
+          <Typography variant="h6" align="center" id="title" className={classes.negativeFeedback}>
           Obs:Após a exclusão de uma anotação não é possível recupera-la!
         </Typography>
         <br/><br/>

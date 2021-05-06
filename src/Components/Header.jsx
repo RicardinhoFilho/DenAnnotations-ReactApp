@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -8,7 +8,10 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import {Link} from "react-router-dom";
-import brokenToken  from "../Services/brokenToken"
+import brokenToken  from "../Services/brokenToken";
+import {useHistory} from "react-router-dom";
+
+import validateSearch from "../Utils/ValidateSearch";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,6 +74,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header() {
   const classes = useStyles();
+  const[search, setSearch] = useState("");
+  const history = useHistory();
 
   return (
     <div className={classes.root}>
@@ -98,6 +103,10 @@ export default function Header() {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
+            <form onSubmit={(event) =>{
+              event.preventDefault();
+              history.push(`/search/${search}`)
+            }}>
             <InputBase
               placeholder="Search…"
               classes={{
@@ -105,7 +114,13 @@ export default function Header() {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              onChange={(ev)=>{
+
+                const search = validateSearch(ev.target.value);
+                setSearch(search);
+              }}
             />
+            </form>
           </div>
         </Toolbar>
       </AppBar>

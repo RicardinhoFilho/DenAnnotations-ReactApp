@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../Components/Header";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import plusImage from "../Assets/Plus.svg";
 import trashImage from "../Assets/Trash.svg";
 import editImage from "../Assets/Edit.svg";
+import SearchIcon from '@material-ui/icons/Search';
 
 import DeleteNote from "../Components/Notes/DeleteNote";
 import AddNote from "../Components/Notes/AddNote";
@@ -58,13 +59,15 @@ const useStyles = makeStyles((theme) => ({
 const Notes = () => {
   const { id } = useParams();
   const [notes, setNotes] = useState([]);
+  const [repository, setRepository] = useState([]);
   const [note, setNote] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDescription, setShowDescription] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
   const [modalAdd, setModalAdd] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
-  const [modalOpenDetail, setOpenNoteDetails] = useState(false);
+  const [modalOpenDetail, setModalOpenDetails] = useState(false);
+  let testModals = true;
 
   function handleShowDescription() {
     setShowDescription(!showDescription);
@@ -72,9 +75,7 @@ const Notes = () => {
 
   function handleModalDelete(id, title, description, annotation) {
     setNote({ id, title, description, annotation });
-
     setModalDelete(true);
-    setOpenNoteDetails(false);
   }
 
   function handleModalAddOpen() {
@@ -84,34 +85,42 @@ const Notes = () => {
   function handleModalUpdate(id, title, description, annotation) {
     setNote({ id, title, description, annotation });
     setModalUpdate(true);
+    testModals = false
   }
 
   function handleOpenNoteDetails(id, title, description, annotation) {
     setNote({ id, title, description, annotation });
-    setOpenNoteDetails(true);
+    
+    if(testModals){
+      setModalOpenDetails(true);
+    }
+      
   }
 
+  const history = useHistory();
   const classes = useStyles();
 
   useEffect(() => {
-    async function getNotes() {
+    async function getData() {
       const token = localStorage.getItem("token");
-      //console.log(id);
       try {
-        if (token) {
-          api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-          const data = await api.get(`/api/notes/${id}`);
-          setNotes(data.data);
-          console.log(note);
-          setLoading(false);
-        }
+        api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+        const notes = await api.get(`/api/notes/${id}`);
+        const repository = await api.get(`/api/repositories/${id}`);
+
+
+        setRepository(repository.data)
+        setNotes(notes.data);
+        setLoading(false);
       } catch (err) {
-        console.log(err);
+        history.push("/login");
       }
     }
 
-    getNotes();
+    getData();
   }, [id]);
+
+ 
 
   if (loading) {
     return <h1>Carregando</h1>;
@@ -123,13 +132,17 @@ const Notes = () => {
 
   return (
     <>
-      <UpdateNote
-        option={modalUpdate}
-        note={note}
-        setModalUpdate={setModalUpdate}
-      />
-      <Header />
+      <Header  data={notes}/>
       <div className={classes.root}>
+      <Typography
+          variant="h2"
+          component="h1"
+          className={classes.title}
+          align="center"
+        >
+          {repository.title}
+        </Typography>
+
         <Typography
           variant="h5"
           component="h2"
@@ -183,14 +196,15 @@ const Notes = () => {
                 </Typography>
                 <Button
                   primary
-                  onClick={(event) => {
+                  onClick={() => {
                     handleModalDelete(
                       item.id,
                       item.title,
                       item.description,
                       item.annotation
                     );
-                    event.preventDefault();
+
+                    testModals= false;
                   }}
                 >
                   <img src={trashImage} className={classes.trash} />
@@ -198,13 +212,13 @@ const Notes = () => {
                 <Button
                   primary
                   onClick={(event) => {
+                    event.preventDefault();
                     handleModalUpdate(
                       item.id,
                       item.title,
                       item.description,
                       item.annotation
                     );
-                    event.preventDefault();
                   }}
                 >
                   <img src={editImage} className={classes.edit} />
@@ -226,18 +240,22 @@ const Notes = () => {
           setModalDelete={setModalDelete}
         />
 
+        <UpdateNote
+          option={modalUpdate}
+          note={note}
+          setModalUpdate={setModalUpdate}
+        />
+
         <AddNote option={modalAdd} setModalAdd={setModalAdd} repId={id} />
       </div>
 
       <Note
         option={modalOpenDetail}
         note={note}
-        setOpenNoteDetails={setOpenNoteDetails}
-        setModalAdd={setModalAdd}
+        setModalOpenDetails={setModalOpenDetails}
         setModalDelete={setModalDelete}
         setModalUpdate={setModalUpdate}
       />
-     
     </>
   );
 };

@@ -15,10 +15,14 @@ import DeleteRepository from "../Components/Repositories/DeleteRepository";
 import UpdateRepository from "../Components/Repositories/UpdateRepository";
 
 import Header from "../Components/Header";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import plusImage from "../Assets/Plus.svg";
 import trashImage from "../Assets/Trash.svg";
 import editImage from "../Assets/Edit.svg";
+import loginImage from "../Assets/login.jpg";
+
+import Loading from "../Components/Loading"
+
 import api from "../Services/api";
 
 const Repositories = () => {
@@ -59,6 +63,11 @@ const Repositories = () => {
       display: "flex",
       justifyContent: "space-around",
     },
+    repImage:{
+      width:"200px",
+      height:"100px"
+    },
+    
   }));
 
   function handleShowDescription() {
@@ -82,14 +91,21 @@ const Repositories = () => {
     return <ListItem button component="a" {...props} />;
   }
   const classes = useStyles();
-
+  const history = useHistory();
   useEffect(() => {
     const token = localStorage.getItem("token");
     async function getData() {
       if (token) {
-        api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-        const result = await api.get("/api/repositories");
-        setData(result.data);
+        try {
+          api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+          const result = await api.get("/api/repositories");
+         
+          setData(result.data);
+        } catch {
+          history.push("/login");
+        }
+      }else{
+        history.push("/login");
       }
     }
 
@@ -99,92 +115,97 @@ const Repositories = () => {
   }, []);
 
   if (loading) {
-    return <h1>Carregando</h1>;
+
+    <Loading/>
   }
 
   return (
     <>
-    <Header/>
-    <div className={classes.root}>
-       
-      <Typography
-        variant="h5"
-        component="h2"
-        className={classes.title}
-        align="center"
-      >
-        Total Repositórios: {data.length}
-      </Typography>
+      <Header />
+      <div className={classes.root}>
+        <Typography
+          variant="h5"
+          component="h2"
+          className={classes.title}
+          align="center"
+        >
+          Total Repositórios: {data.length}
+        </Typography>
 
-      <div className={classes.firstButtons}>
-        <FormControlLabel
-          label="Adicionar"
-          onClick={() => handleModalAddOpen()}
-          control={
-            <Button primary>
-              <img src={plusImage} className={classes.plus} />
-            </Button>
-          }
+        <div className={classes.firstButtons}>
+          <FormControlLabel
+            label="Adicionar"
+            onClick={() => handleModalAddOpen()}
+            control={
+              <Button primary>
+                <img src={plusImage} className={classes.plus} />
+              </Button>
+            }
+          />
+          <FormControlLabel
+            label={"Descrições"}
+            control={
+              <Switch
+                onChange={handleShowDescription}
+                name="checkedB"
+                color="primary"
+              />
+            }
+          />
+        </div>
+        <List className={classes.list}>
+          {data.map((item) => (
+            <Link className={classes.link} to={`/notes/${item.id}`}>
+              <ListItemLink key={item.id} className={classes.item}>
+               
+                <Typography
+                  variant="h4"
+                  component="h2"
+                  className={classes.title}
+                >
+                  {item.title}
+                </Typography>
+                <Button
+                  primary
+                  onClick={(event) => {
+                    handleModalDelete(item.id, item.title, item.description);
+                    event.preventDefault();
+                  }}
+                >
+                  <img src={trashImage} className={classes.trash} />
+                </Button>
+                <Button
+                  primary
+                  onClick={(event) => {
+                    handleModalUpdate(item.id, item.title, item.description);
+                    event.preventDefault();
+                  }}
+                >
+                  <img src={editImage} className={classes.edit} />
+                </Button>
+              </ListItemLink>
+              {showDescription ? (
+                <Typography variant="spam">
+                  {("\n", item.description)}{" "}
+                </Typography>
+              ) : (
+                ""
+              )}
+            </Link>
+          ))}
+        </List>
+        <AddRepository option={modalAdd} setModalAdd={setModalAdd} />
+        <DeleteRepository
+          option={modalDelete}
+          rep={rep}
+          setModalDelete={setModalDelete}
         />
-        <FormControlLabel
-          label={"Descrições"}
-          control={
-            <Switch
-              onChange={handleShowDescription}
-              name="checkedB"
-              color="primary"
-            />
-          }
+        <UpdateRepository
+          option={modalUpdate}
+          rep={rep}
+          setModalUpdate={setModalUpdate}
         />
       </div>
-      <List className={classes.list}>
-        {data.map((item) => (
-          <Link className={classes.link} to={`/notes/${item.id}`}>
-            <ListItemLink key={item.id} className={classes.item}>
-              <Typography variant="h4" component="h2" className={classes.title}>
-                {item.title}
-              </Typography>
-              <Button
-                primary
-                onClick={(event) => {
-                  handleModalDelete(item.id, item.title, item.description);
-                  event.preventDefault();
-                }}
-              >
-                <img src={trashImage} className={classes.trash} />
-              </Button>
-              <Button
-                primary
-                onClick={(event) => {
-                  handleModalUpdate(item.id, item.title, item.description);
-                  event.preventDefault();
-                }}
-              >
-                <img src={editImage} className={classes.edit} />
-              </Button>
-            </ListItemLink>
-            {showDescription ? (
-              <Typography variant="spam">
-                {("\n", item.description)}{" "}
-              </Typography>
-            ) : (
-              ""
-            )}
-          </Link>
-        ))}
-      </List>
-      <AddRepository option={modalAdd} setModalAdd={setModalAdd} />
-      <DeleteRepository
-        option={modalDelete}
-        rep={rep}
-        setModalDelete={setModalDelete}
-      />
-      <UpdateRepository
-        option={modalUpdate}
-        rep={rep}
-        setModalUpdate={setModalUpdate}
-      />
-    </div>
     </>
   );
 };

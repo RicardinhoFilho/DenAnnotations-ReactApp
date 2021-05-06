@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     marginTop: "15vw",
   },
+  negativeFeedback:{
+    color:"#ff6961"
+  },
 }));
 
 export default function DeleteRepository({ option, rep, setModalDelete }) {
@@ -64,7 +67,7 @@ const handleSubmit=()=>{
             value={rep.description}
             />
           <br/><br/>
-          <Typography variant="h7" align="center" id="title">
+          <Typography variant="h6" align="center" id="title" className={classes.negativeFeedback}>
           Obs:Após a exclusão de um repositório não é possível recupera-lo, está desabilitada a exclusão de repositórios povoados!
         </Typography>
         <br/><br/>

@@ -1,33 +1,41 @@
 import React, { useState } from "react";
-import { Card, Typography, TextField, Button, makeStyles } from "@material-ui/core";
+import {
+  Card,
+  Typography,
+  TextField,
+  Button,
+  makeStyles,
+} from "@material-ui/core";
 import api from "../Services/api";
 import Header from "../Components/Header";
 import { Link } from "react-router-dom";
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '40%',
-    margin:"auto",
-    marginTop:"2rem"
-
+    width: "50vw",
+    margin: "auto",
+    marginTop: "2rem",
   },
-  input:{
-    width: '100%',
-    margin:"auto",
-    marginTop:"0.8em",
-    marginBottom:"0.8em"
+  input: {
+    width: "100%",
+    margin: "auto",
+    marginTop: "0.8em",
+    marginBottom: "0.8em",
   },
-  button:{
-    marginTop:"1em"
+  title: {
+    marginTop: "1em"
   },
-  negativeFeedback:{
-    color:"#ff6961",
+  button: {
+    marginTop: "1em",
   },
-  link:{
-    marginLeft:"2vw",
-    textDecoration:"none"
-  }
- 
+  negativeFeedback: {
+    color: "#ff6961",
+  },
+  link: {
+    marginLeft: "2vw",
+    textDecoration: "none",
+  },
 }));
 
 const Login = () => {
@@ -37,36 +45,43 @@ const Login = () => {
   const [error, setError] = useState(false);
 
   const handleLogIn = async () => {
+    try {
+      const {
+        data: { token },
+      } = await api.post("/api/user/login", { email, password });
 
-    try{
+      localStorage.setItem("token", JSON.stringify(token));
 
-    
-    const {data:{token}} = await api.post("/api/user/login", { email, password });
-
-    
-    localStorage.setItem("token", JSON.stringify(token));
-
-    api.defaults.headers.Authorization = `Bearer ${token}`;
-    window.location.href = "http://localhost:3000/repositories";
-  }catch(err){
-    setError(true)
-  }
+      api.defaults.headers.Authorization = `Bearer ${token}`;
+      window.location.href = "http://localhost:3000/repositories";
+    } catch (err) {
+      setError(true);
+    }
   };
 
-  
   const classes = useStyles();
 
   return (
     <>
-    <Header />
-      <form className={styles.root}
+      <Header />
+      <Typography
+          variant="h2"
+          component="h1"
+          className={classes.title}
+          align="center"
+        >
+          DevAnnotations
+        </Typography>
+      <form
+        className={styles.root}
         onSubmit={(event) => {
           handleLogIn();
           event.preventDefault();
           //
         }}
       >
-        <TextField className={styles.input}
+        <TextField
+          className={styles.input}
           margin="normal"
           label="Usuário"
           value={email}
@@ -76,7 +91,8 @@ const Login = () => {
           }}
         />
         <br />
-        <TextField className={styles.input}
+        <TextField
+          className={styles.input}
           type="password"
           margin="normal"
           label="Senha"
@@ -87,17 +103,33 @@ const Login = () => {
           }}
         />
         <br />
-        {error? <Typography className={styles.negativeFeedback}>Dados Inválidos!</Typography>:"" }
-        <Button type="submit" variant="contained" color="primary" className={styles.button}>
+        {error ? (
+          <Typography className={styles.negativeFeedback}>
+            Dados Inválidos!
+          </Typography>
+        ) : (
+          ""
+        )}
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          className={styles.button}
+        >
           Entrar
         </Button>
         <Link to="/singUp" className={classes.link}>
-        <Button type="submit" variant="contained" color="primary" className={styles.button}>
-          Não posssuo conta
-        </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={styles.button}
+          >
+            Não posssuo conta
+          </Button>
         </Link>
       </form>
-   </>
+    </>
   );
 };
 
