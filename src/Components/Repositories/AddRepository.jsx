@@ -94,6 +94,18 @@ const handleSubmit=()=>{
             onChange={(event) => {
               setDescription(event.target.value);
             }}
+            
+          />
+          <br /><br /> 
+
+          <TextField
+          
+            type="file"
+           
+            onChange={(event) => {
+              setDescription(event.target.value);
+            }}
+            
           />
           <br /><br /> 
           <Button type="submit" variant="contained" color="primary" id="button">

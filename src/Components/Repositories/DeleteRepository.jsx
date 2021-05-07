@@ -30,17 +30,35 @@ const useStyles = makeStyles((theme) => ({
 export default function DeleteRepository({ option, rep, setModalDelete }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-
+const[negativeFeedback, setNegativeFeedback]= useState(true)
   useEffect(() => {
     if (open != option) {
       setOpen(option);
     }
   });
-const handleSubmit=()=>{
-    api.delete(`/api/repositories/${rep.id}`);
+const handleSubmit=async(ev)=>{
+  try{
+    
+    const teste =  await api.delete(`/api/repositories/${rep.id}`);
+    if(teste.status == 200){
+      document.location.reload()
+    }else{
+      setNegativeFeedback(false);
+    }
+   
+  }catch(err){
+    
+    console.log(err)
+    setNegativeFeedback(false);
+   
+ }
+  
+  
+    
 }
 
   const handleClose = () => {
+    setNegativeFeedback(true);
     setOpen(false);
     setModalDelete(false);
   };
@@ -51,8 +69,9 @@ const handleSubmit=()=>{
         <Typography variant="h6" align="center" id="title">
           Excluir Repositório!
         </Typography>
-        <form onSubmit={()=>{
-            handleSubmit();
+        <form onSubmit={(ev)=>{
+            handleSubmit(ev);
+            ev.preventDefault();
         }}>
           <TextField
             label="Título"
@@ -68,8 +87,16 @@ const handleSubmit=()=>{
             />
           <br/><br/>
           <Typography variant="h6" align="center" id="title" className={classes.negativeFeedback}>
-          Obs:Após a exclusão de um repositório não é possível recupera-lo, está desabilitada a exclusão de repositórios povoados!
-        </Typography>
+          {!negativeFeedback ? (
+                <Typography variant="subtitle">
+               Não é possível excluir <strong>{rep.title}</strong>, pois ele está povoado!
+              </Typography>
+              ) : (
+                <Typography variant="subtitle">
+                  Obs:Após a exclusão de um repositório não é possível recupera-lo, está desabilitada a exclusão de repositórios povoados!
+                </Typography>
+              )}
+       </Typography>
         <br/><br/>
           <Button type="submit" variant="contained" color="secondary" id="button">
             Confirmar

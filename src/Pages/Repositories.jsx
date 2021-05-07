@@ -33,6 +33,7 @@ const Repositories = () => {
   const [modalDelete, setModalDelete] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
   const [rep, setRep] = useState([]);
+  const[feedback, setFeedback] = useState("");
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -168,20 +169,20 @@ const Repositories = () => {
                 <Button
                   primary
                   onClick={(event) => {
-                    handleModalDelete(item.id, item.title, item.description);
-                    event.preventDefault();
-                  }}
-                >
-                  <img src={trashImage} className={classes.trash} />
-                </Button>
-                <Button
-                  primary
-                  onClick={(event) => {
                     handleModalUpdate(item.id, item.title, item.description);
                     event.preventDefault();
                   }}
                 >
                   <img src={editImage} className={classes.edit} />
+                </Button>
+                <Button
+                  primary
+                  onClick={(event) => {
+                    handleModalDelete(item.id, item.title, item.description);
+                    event.preventDefault();
+                  }}
+                >
+                  <img src={trashImage} className={classes.trash} />
                 </Button>
               </ListItemLink>
               {showDescription ? (
@@ -199,6 +200,7 @@ const Repositories = () => {
           option={modalDelete}
           rep={rep}
           setModalDelete={setModalDelete}
+          feedback={setFeedback}
         />
         <UpdateRepository
           option={modalUpdate}

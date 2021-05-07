@@ -5,6 +5,7 @@ import SingUp from "./Pages/SingUp";
 import UpdateAccount from "./Pages/updateAccount";
 import Error404 from "./Pages/Error404";
 import Search from "./Pages/Search";
+import AddFile from "./Pages/AddFile";
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 function App() {
@@ -34,7 +35,9 @@ function App() {
             <Search />
           </Route>
           <Route>
-            <Error404 />
+            {/* <Error404 /> */}
+            <AddFile />
+
           </Route>
         </Switch>
       </Router>

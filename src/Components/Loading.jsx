@@ -16,5 +16,5 @@ const useStyles = makeStyles((theme) => ({
 
 export  default function Loading(){
     const classes = useStyles();
-    return( <Typography align="center"><img src={errorImage} className={classes.errorImage}/></Typography>)
+    return( <Typography align="center"><img src={errorImage} className={classes.errorImage} alt="Carregando..."/></Typography>)
 }

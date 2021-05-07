@@ -194,6 +194,21 @@ const Notes = () => {
                 >
                   {item.title}
                 </Typography>
+
+                <Button
+                  primary
+                  onClick={(event) => {
+                    event.preventDefault();
+                    handleModalUpdate(
+                      item.id,
+                      item.title,
+                      item.description,
+                      item.annotation
+                    );
+                  }}
+                >
+                  <img src={editImage} className={classes.edit} />
+                </Button>
                 <Button
                   primary
                   onClick={() => {
@@ -209,20 +224,7 @@ const Notes = () => {
                 >
                   <img src={trashImage} className={classes.trash} />
                 </Button>
-                <Button
-                  primary
-                  onClick={(event) => {
-                    event.preventDefault();
-                    handleModalUpdate(
-                      item.id,
-                      item.title,
-                      item.description,
-                      item.annotation
-                    );
-                  }}
-                >
-                  <img src={editImage} className={classes.edit} />
-                </Button>
+                
               </ListItemLink>
               {showDescription ? (
                 <Typography variant="spam">
