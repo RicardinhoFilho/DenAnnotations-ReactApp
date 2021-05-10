@@ -62,7 +62,7 @@ const Search = () => {
   const [modalDelete, setModalDelete] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
   const [modalOpenDetail, setModalOpenDetails] = useState(false);
-  const[refresh, setRefresh] = useState(false);
+  const[refresh, setRefresh] = useState(true);
   const [note, setNote] = useState([]);
 
   const { search } = useParams();
@@ -85,6 +85,7 @@ const Search = () => {
           setRepositories(result.data.repositories);
           setNotes(result.data.notes);
           setLoading(false);
+          setRefresh(false);
         } catch {
           history.push("/login");
         }

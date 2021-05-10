@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
     height: "50px",
   },
   footer: {
+    marginTop: "50px",
     backgroundColor: "#d3d3d3",
   },
   linkDiv: {
@@ -85,7 +86,7 @@ export default function FullScreenDialog({
   const [modalFile, setModalFile] = useState(false);
   const [files, setFiles] = useState([]);
   const [file, setFile] = useState([]);
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(true);
   const history = useHistory();
 
   const handleClickOpen = () => {
@@ -109,21 +110,14 @@ export default function FullScreenDialog({
       history.push("/login");
     }
   }
-  useEffect(() => {
-    //console.log("mudou")
-    //console.log(note.id)
-    if (option) {
-      getData();
-      setRefresh(false);
-    }
-  }, [refresh]);
+ 
   useEffect(() => {
     setOpen(option);
-
+    setRefresh(false);
     if (option) {
       getData();
     }
-  }, [option]);
+  }, [option,refresh]);
 
   return (
     <div>
@@ -179,9 +173,7 @@ export default function FullScreenDialog({
               }}
             ></div>
           </div>
-          <div class={classes.wrapper}>
-            <div class={classes.push}></div>
-          </div>
+         
           <ListItem className={classes.footer}>
             <ListItemText
               primary={
