@@ -39,7 +39,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function UpdateNote({ option, note, setModalUpdate}) {
+export default function UpdateNote({ option, note, setModalUpdate, setRefresh,
+  setNote}) {
   const editor = useRef(null);
   const [content, setContent] = useState("");
 
@@ -66,7 +67,9 @@ export default function UpdateNote({ option, note, setModalUpdate}) {
     }
   });
   const handleSubmit = async() => {
-    await api.patch(`/api/note/${note.id}`, { title, description, annotation });
+    await api.patch(`/api/note/${note.id}`, { title, description, annotation,setRefresh });
+    const id= note.id;
+    setNote({id,title, description, annotation, id})
   };
 
   const handleClose = () => {
@@ -88,6 +91,12 @@ export default function UpdateNote({ option, note, setModalUpdate}) {
               descriptionError.isValid != false
             ) {
               handleSubmit();
+              event.preventDefault();
+              handleClose()
+              setRefresh(true);
+              setTitle("");
+              setAnnotation("");
+              setDescription("");
             } else {
               event.preventDefault();
             }

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UpdateRepository({ option, rep, setModalUpdate }) {
+export default function UpdateRepository({ option, rep, setModalUpdate, setRefresh }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -75,6 +75,12 @@ export default function UpdateRepository({ option, rep, setModalUpdate }) {
              descriptionError.isValid != false
             ) {
               handleSubmit();
+              event.preventDefault();
+              setRefresh(true);
+              handleClose();
+              setTitle("");
+              setDescription("");
+              
             } else {
               event.preventDefault();
             }

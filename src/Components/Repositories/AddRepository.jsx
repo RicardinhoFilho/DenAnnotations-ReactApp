@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddRepository({ option, setModalAdd }) {
+export default function AddRepository({ option, setModalAdd, setRefresh }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -37,9 +37,9 @@ export default function AddRepository({ option, setModalAdd }) {
       setOpen(option);
     }
   });
-const handleSubmit=()=>{
-    api.post("/api/repositories", {title, description});
-}
+  const handleSubmit = () => {
+    api.post("/api/repositories", { title, description });
+  };
 
   const handleClose = () => {
     setOpen(false);
@@ -52,16 +52,25 @@ const handleSubmit=()=>{
         <Typography variant="h6" align="center" id="title">
           Adicionar Repositório!
         </Typography>
-        <form onSubmit={(event)=>{
+        <form
+          onSubmit={(event) => {
             if (
               checkTitle(title).isValid == true &&
               checkDescription(description).isValid == true
             ) {
               handleSubmit();
+              event.preventDefault();
+              setRefresh(true);
+              handleClose();
+              setRefresh(true);
+              handleClose();
+              setTitle("");
+              setDescription("");
             } else {
               event.preventDefault();
             }
-        }}>
+          }}
+        >
           <TextField
             label="Título"
             margin="normal"
@@ -94,20 +103,10 @@ const handleSubmit=()=>{
             onChange={(event) => {
               setDescription(event.target.value);
             }}
-            
           />
-          <br /><br /> 
+          <br />
+          <br />
 
-          <TextField
-          
-            type="file"
-           
-            onChange={(event) => {
-              setDescription(event.target.value);
-            }}
-            
-          />
-          <br /><br /> 
           <Button type="submit" variant="contained" color="primary" id="button">
             Confirmar
           </Button>

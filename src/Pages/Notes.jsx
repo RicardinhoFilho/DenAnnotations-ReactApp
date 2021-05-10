@@ -67,6 +67,7 @@ const Notes = () => {
   const [modalAdd, setModalAdd] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
   const [modalOpenDetail, setModalOpenDetails] = useState(false);
+  const[refresh, setRefresh] = useState(false);
   let testModals = true;
 
   function handleShowDescription() {
@@ -112,13 +113,14 @@ const Notes = () => {
         setRepository(repository.data)
         setNotes(notes.data);
         setLoading(false);
+        setRefresh(false);
       } catch (err) {
         history.push("/login");
       }
     }
 
     getData();
-  }, [id]);
+  }, [id, refresh]);
 
  
 
@@ -240,15 +242,19 @@ const Notes = () => {
           option={modalDelete}
           note={note}
           setModalDelete={setModalDelete}
+          setRefresh = {setRefresh}
+          setNote={setNote}
         />
 
         <UpdateNote
           option={modalUpdate}
           note={note}
           setModalUpdate={setModalUpdate}
+          setRefresh = {setRefresh}
+           setNote={setNote}
         />
 
-        <AddNote option={modalAdd} setModalAdd={setModalAdd} repId={id} />
+        <AddNote option={modalAdd} setModalAdd={setModalAdd} repId={id} setRefresh={setRefresh}/>
       </div>
 
       <Note
@@ -257,6 +263,7 @@ const Notes = () => {
         setModalOpenDetails={setModalOpenDetails}
         setModalDelete={setModalDelete}
         setModalUpdate={setModalUpdate}
+        setRefresh={setRefresh}
       />
     </>
   );

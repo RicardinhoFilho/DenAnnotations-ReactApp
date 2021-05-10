@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DeleteRepository({ option, note, setModalDelete }) {
+export default function DeleteRepository({ option, note, setModalDelete, setRefresh, setNote}) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -37,6 +37,7 @@ export default function DeleteRepository({ option, note, setModalDelete }) {
   });
 const handleSubmit=()=>{
     api.delete(`/api/note/${note.id}`);
+    setNote("")
 }
 
   const handleClose = () => {
@@ -50,8 +51,11 @@ const handleSubmit=()=>{
         <Typography variant="h6" align="center" id="title">
           Excluir Anotação!
         </Typography>
-        <form onSubmit={()=>{
+        <form onSubmit={(ev)=>{
             handleSubmit();
+            ev.preventDefault();
+            setRefresh(true);
+            handleClose()
         }}>
           <TextField
             label="Título"

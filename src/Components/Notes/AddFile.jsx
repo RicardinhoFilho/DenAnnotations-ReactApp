@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import api from "../../Services/api";
+import checkTitle from "../../Utils/CheckTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Modal,
@@ -32,12 +33,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddFile = ({ option, setModalFile, noteId,setRefresh }) => {
+const AddFile = ({ option, setModalFile, noteId, setRefresh }) => {
   const filesElement = useRef(null);
   const [title, setTitle] = useState("");
+  const [titleError, setTitleError] = useState("");
   const [open, setOpen] = useState(false);
 
-const classes = useStyles();  
+  const classes = useStyles();
 
   const sendFile = async () => {
     const dataForm = new FormData();
@@ -46,10 +48,10 @@ const classes = useStyles();
       dataForm.append("title", title);
       dataForm.append("noteId", noteId);
     }
-     const token = localStorage.getItem("token");
-     api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-     const res = await api.post(`/api/files/${noteId}`, dataForm);
-   // console.log(dataForm);
+    const token = localStorage.getItem("token");
+    api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+    const res = await api.post(`/api/files/${noteId}`, dataForm);
+    // console.log(dataForm);
   };
 
   const handleClose = () => {
@@ -61,56 +63,57 @@ const classes = useStyles();
     if (open != option) {
       setOpen(option);
     }
-
-    
-
   });
 
   return (
-
-
-<Modal open={open} onClose={handleClose} className={classes.modal}>
+    <Modal open={open} onClose={handleClose} className={classes.modal}>
       <div className={classes.paper}>
         <Typography variant="h6" align="center" id="title">
           Adicionar Anexo!
         </Typography>
-        <form  className={classes.form}
-        onSubmit={(event)=>{
-          
-            sendFile();
+        <form
+          className={classes.form}
+          onSubmit={(event) => {
+            console.log(titleError.isValid)
+            if (titleError) {
+              sendFile();
+              event.preventDefault();
+              setRefresh(true);
+              setTitle("");
+              handleClose();
+            }
             event.preventDefault();
-            setRefresh(true);
-            handleClose()
-        }}>
+          }}
+        >
           <TextField
             label="Título"
             margin="normal"
             value={title}
             required
-            // onBlur={(event) => {
-            //   const isValid = checkTitle(title);
+            onBlur={(event) => {
+              const isValid = checkTitle(title);
 
-            //   setTitleError(isValid);
-            // }}
-            //error={titleError.error}
-            //helperText={titleError.msg}
+              setTitleError(isValid);
+            }}
+            error={titleError.error}
+            helperText={titleError.msg}
             onChange={(event) => {
               setTitle(event.target.value);
             }}
           />
           <br />
-          <input
-           type="file" multiple ref={filesElement}
-          />
-        <br/><br/><br/><br/>
-      
+          <input type="file" multiple ref={filesElement}  required/>
+          <br />
+          <br />
+          <br />
+          <br />
+
           <Button type="submit" variant="contained" color="primary" id="button">
             Confirmar
           </Button>
         </form>
       </div>
     </Modal>
-
   );
 };
 

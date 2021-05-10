@@ -11,7 +11,7 @@ const checkExtension = (file)=>{
     const extension = file.substr(size-3);
     
     if (extension == "pdf") return <PictureAsPdfRoundedIcon/>
-    if (extension == "jpeg" || extension == "png" || extension == "jpg") return <ImageIcon/>
+    if (extension == "jpeg" || extension == "png" || extension == "jpg" || extension == "svg") return <ImageIcon/>
     if (extension == "gif") return <GifIcon/>
     
     return <DescriptionIcon/>

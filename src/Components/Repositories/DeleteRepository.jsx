@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DeleteRepository({ option, rep, setModalDelete }) {
+export default function DeleteRepository({ option, rep, setModalDelete, setRefresh }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 const[negativeFeedback, setNegativeFeedback]= useState(true)
@@ -41,9 +41,12 @@ const handleSubmit=async(ev)=>{
     
     const teste =  await api.delete(`/api/repositories/${rep.id}`);
     if(teste.status == 200){
-      document.location.reload()
+      ev.preventDefault();
+      setRefresh(true);
+      handleClose()
     }else{
       setNegativeFeedback(false);
+      
     }
    
   }catch(err){
@@ -71,6 +74,7 @@ const handleSubmit=async(ev)=>{
         </Typography>
         <form onSubmit={(ev)=>{
             handleSubmit(ev);
+
             ev.preventDefault();
         }}>
           <TextField

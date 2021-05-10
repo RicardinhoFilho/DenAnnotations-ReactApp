@@ -34,6 +34,7 @@ const Repositories = () => {
   const [modalUpdate, setModalUpdate] = useState(false);
   const [rep, setRep] = useState([]);
   const[feedback, setFeedback] = useState("");
+  const[refresh, setRefresh] = useState(false);
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -102,6 +103,7 @@ const Repositories = () => {
           const result = await api.get("/api/repositories");
          
           setData(result.data);
+          setRefresh(false)
         } catch {
           history.push("/login");
         }
@@ -113,7 +115,7 @@ const Repositories = () => {
     getData();
 
     setLoading(false);
-  }, []);
+  }, [refresh]);
 
   if (loading) {
 
@@ -195,17 +197,19 @@ const Repositories = () => {
             </Link>
           ))}
         </List>
-        <AddRepository option={modalAdd} setModalAdd={setModalAdd} />
+        <AddRepository option={modalAdd} setModalAdd={setModalAdd} setRefresh={setRefresh}/>
         <DeleteRepository
           option={modalDelete}
           rep={rep}
           setModalDelete={setModalDelete}
           feedback={setFeedback}
+          setRefresh={setRefresh}
         />
         <UpdateRepository
           option={modalUpdate}
           rep={rep}
           setModalUpdate={setModalUpdate}
+          setRefresh={setRefresh}
         />
       </div>
     </>

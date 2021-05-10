@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function AddNote({ option, setModalAdd, repId }) {
+export default function AddNote({ option, setModalAdd, repId,setRefresh }) {
 
     const editor = useRef(null)
 	const [content, setContent] = useState('')
@@ -75,7 +75,7 @@ const handleSubmit=()=>{
     <Modal open={open} onClose={handleClose} className={classes.modal}>
       <div className={classes.paper}>
         <Typography variant="h6" align="center" id="title">
-          Adicionar Repositório!
+          Adicionar Anotações!
         </Typography>
         <form  className={classes.form}
         onSubmit={(event)=>{
@@ -84,6 +84,12 @@ const handleSubmit=()=>{
               checkDescription(description).isValid == true && annotation.length > 0
             ) {
               handleSubmit();
+              event.preventDefault();
+              setRefresh(true);
+              setTitle("");
+              setAnnotation("");
+              setDescription("");
+              handleClose()
             } else {
               event.preventDefault();
             }

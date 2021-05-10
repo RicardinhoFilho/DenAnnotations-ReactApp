@@ -62,6 +62,7 @@ const Search = () => {
   const [modalDelete, setModalDelete] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
   const [modalOpenDetail, setModalOpenDetails] = useState(false);
+  const[refresh, setRefresh] = useState(false);
   const [note, setNote] = useState([]);
 
   const { search } = useParams();
@@ -93,7 +94,7 @@ const Search = () => {
     }
 
     getData();
-  }, [search]);
+  }, [search, refresh]);
 
   if (loading) {
     <Loading/>
@@ -190,12 +191,16 @@ const Search = () => {
         option={modalDelete}
         note={note}
         setModalDelete={setModalDelete}
+        setRefresh = {setRefresh}
+        setNote={setNote}
       />
 
       <UpdateNote
         option={modalUpdate}
         note={note}
         setModalUpdate={setModalUpdate}
+        setRefresh = {setRefresh}
+        setNote={setNote}
       />
 
       <Note
@@ -203,6 +208,7 @@ const Search = () => {
         note={note}
         setModalOpenDetails={setModalOpenDetails}
         setModalDelete={setModalDelete}
+        setRefresh={setRefresh}
         setModalUpdate={setModalUpdate}
       />
     </>

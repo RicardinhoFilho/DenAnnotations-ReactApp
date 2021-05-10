@@ -14,12 +14,12 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 
-
+import ModalFile from "./ModalFile";
 
 import { useHistory } from "react-router-dom";
 import AddFile from "./AddFile";
 import api from "../../Services/api";
-import checkExtension from "../../Utils/CheckExtension"
+import checkExtension from "../../Utils/CheckExtension";
 
 import trashImage from "../../Assets/Trash.svg";
 import editImage from "../../Assets/Edit.svg";
@@ -45,30 +45,26 @@ const useStyles = makeStyles((theme) => ({
   imageButtons: {
     width: 30,
   },
-  wrapper:{
+  wrapper: {
     minHeight: "100%",
-  marginBottom: "-50px"
+    marginBottom: "-50px",
   },
-  push:{
-    height: "50px"
+  push: {
+    height: "50px",
   },
-  footer:{
+  footer: {
     backgroundColor: "#d3d3d3",
   },
-  linkDiv:{
-    display:"inline", 
-    marginTop:"20px"
+  linkDiv: {
+    display: "inline",
+    marginTop: "20px",
   },
-  link:{
-    color:"black",
-    textDecoration: "none",
+
+  buttonFile: {
+    margin: "5px",
   },
-  buttonFile:{
-    margin:"5px",
-  },
-  fileTitle:{
-      fontSize:"12px"
-    
+  fileTitle: {
+    fontSize: "12px",
   },
 }));
 
@@ -85,8 +81,10 @@ export default function FullScreenDialog({
 }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [modalAddFile, setModalAddFile] = useState(false);
   const [modalFile, setModalFile] = useState(false);
   const [files, setFiles] = useState([]);
+  const [file, setFile] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const history = useHistory();
 
@@ -99,34 +97,33 @@ export default function FullScreenDialog({
     setModalOpenDetails(false);
   };
 
+  async function getData() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+      const result = await api.get(`/api/files/${note.id}`);
+      // console.log("teste",result);
+      setFiles(result.data);
+      //console.log(files)
+    } else {
+      history.push("/login");
+    }
+  }
+  useEffect(() => {
+    //console.log("mudou")
+    //console.log(note.id)
+    if (option) {
+      getData();
+      setRefresh(false);
+    }
+  }, [refresh]);
   useEffect(() => {
     setOpen(option);
-    
-    const token = localStorage.getItem("token");
-    async function getData() {
-      if (token) {
-        api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-        const result = await api.get(`/api/files/${note.id}`);
-        console.log("teste",result);
-        setFiles(result.data);
-        //console.log(files)
-      }else{
-        history.push("/login");
-      }
-      
-    }
 
-    if(option){
+    if (option) {
       getData();
     }
-      
-      //console.log("aqui",files)
-      
-      
-    
-  },[option, refresh]);
-
-
+  }, [option]);
 
   return (
     <div>
@@ -183,30 +180,39 @@ export default function FullScreenDialog({
             ></div>
           </div>
           <div class={classes.wrapper}>
-    <div class={classes.push}>
-    </div>
-  </div>
+            <div class={classes.push}></div>
+          </div>
           <ListItem className={classes.footer}>
-            <ListItemText 
+            <ListItemText
               primary={
                 <div>
                   {" "}
                   <Button
                     onClick={() => {
-                      setModalFile(true);
+                      setModalAddFile(true);
                     }}
                   >
                     <img src={plusImage} className={classes.imageButtons} />
                   </Button>
-                   {files.map((item) => ( 
-                   <div className={classes.linkDiv}>
-                      <Button variant="contained" className={classes.buttonFile}><a href={`http://localhost:3333/uploads/${item.file}`} target="_blank" className={classes.link}>
-
-                      <Typography  className={classes.fileTitle}>{checkExtension(item.file)}
-                        {item.title}</Typography></a></Button>
-                      
-                      </div>
-                   ))} 
+                  {note.id > 0
+                    ? files.map((item) => (
+                        <div className={classes.linkDiv}>
+                          <Button
+                            variant="contained"
+                            className={classes.buttonFile}
+                            onClick={() => {
+                              setFile(item);
+                              setModalFile(true);
+                            }}
+                          >
+                            <Typography className={classes.fileTitle}>
+                              {checkExtension(item.file)}
+                              {item.title}
+                            </Typography>
+                          </Button>
+                        </div>
+                      ))
+                    : ""}
                 </div>
               }
             />
@@ -214,10 +220,16 @@ export default function FullScreenDialog({
         </List>
       </Dialog>
       <AddFile
-        option={modalFile}
+        option={modalAddFile}
         noteId={note.id}
-        setModalFile={setModalFile}
+        setModalFile={setModalAddFile}
         setRefresh={setRefresh}
+      />
+      <ModalFile
+        option={modalFile}
+        file={file}
+        setRefresh={setRefresh}
+        setModalFile={setModalFile}
       />
     </div>
   );
