@@ -70,7 +70,7 @@ const Login = () => {
           className={classes.title}
           align="center"
         >
-          DevAnnotations
+          Anotações Pessoais
         </Typography>
       <form
         className={styles.root}

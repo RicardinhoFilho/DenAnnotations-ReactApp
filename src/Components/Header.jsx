@@ -11,6 +11,8 @@ import {Link} from "react-router-dom";
 import brokenToken  from "../Services/brokenToken";
 import {useHistory} from "react-router-dom";
 
+import sinsoftIcon from "../Assets/teste.png"
+
 import validateSearch from "../Utils/ValidateSearch";
 
 const useStyles = makeStyles((theme) => ({
@@ -69,6 +71,11 @@ const useStyles = makeStyles((theme) => ({
   link:{
     textDecoration:"none",
     color:"inherit"
+  },
+  logo:{
+    height:"60px",
+    marginTop: "0.8rem",
+    marginBut: "0.8rem",
   }
 }));
 
@@ -81,8 +88,10 @@ export default function Header() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography className={classes.title} variant="h6" noWrap>
-            DevAnnotations
+          <Typography className={classes.title} variant="a" noWrap>
+            <a href="http://www.sinsoft.com.br/index.php">
+            <img src={sinsoftIcon} alt="logo sinsoft" className={classes.logo} />
+            </a>
           </Typography>
           
           <Typography className={classes.title} variant="h7" noWrap>
