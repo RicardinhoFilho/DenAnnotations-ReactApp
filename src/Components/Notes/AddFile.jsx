@@ -80,7 +80,7 @@ const AddFile = ({ option, setModalFile, noteId, setRefresh,setFiles }) => {
             if (titleError) {
               sendFile();
               event.preventDefault();
-              setRefresh(true);
+              //setRefresh(true);
               
               setTitle("");
               handleClose();
