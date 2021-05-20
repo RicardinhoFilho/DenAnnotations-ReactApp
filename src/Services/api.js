@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: 'http://localhost:3333',
+  baseURL: 'http://cpro47698.publiccloud.com.br',
 });

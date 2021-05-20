@@ -100,12 +100,13 @@ export default function FullScreenDialog({
 
   async function getData() {
     const token = localStorage.getItem("token");
+    //console.log("teste")
     if (token) {
       api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
       const result = await api.get(`/api/files/${note.id}`);
       // console.log("teste",result);
       setFiles(result.data);
-      //console.log(files)
+      console.log(files)
     } else {
       history.push("/login");
     }
@@ -113,10 +114,12 @@ export default function FullScreenDialog({
  
   useEffect(() => {
     setOpen(option);
-    setRefresh(false);
-    if (option) {
+    
+    
       getData();
-    }
+
+      setRefresh(false);
+    
   }, [option,refresh]);
 
   return (
@@ -186,7 +189,7 @@ export default function FullScreenDialog({
                   >
                     <img src={plusImage} className={classes.imageButtons} />
                   </Button>
-                  {note.id > 0
+                  {files.length > 0 
                     ? files.map((item) => (
                         <div className={classes.linkDiv}>
                           <Button
@@ -216,6 +219,7 @@ export default function FullScreenDialog({
         noteId={note.id}
         setModalFile={setModalAddFile}
         setRefresh={setRefresh}
+        setFiles={setFiles}
       />
       <ModalFile
         option={modalFile}

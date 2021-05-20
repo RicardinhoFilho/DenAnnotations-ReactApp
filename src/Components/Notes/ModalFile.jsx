@@ -115,7 +115,7 @@ export default function ModalFile({ option, setModalFile, file, setRefresh }) {
             className={classes.button}
           >
             <a
-              href={`http://localhost:3333/uploads/${file.file}`}
+              href={`http://cpro47698.publiccloud.com.br/uploads/${file.file}`}
               target="_blank"
               className={classes.link}
             >

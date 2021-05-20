@@ -11,7 +11,7 @@ import {Link} from "react-router-dom";
 import brokenToken  from "../Services/brokenToken";
 import {useHistory} from "react-router-dom";
 
-import sinsoftIcon from "../Assets/teste.png"
+import sinsoftIcon from "../Assets/teste2.png"
 
 import validateSearch from "../Utils/ValidateSearch";
 

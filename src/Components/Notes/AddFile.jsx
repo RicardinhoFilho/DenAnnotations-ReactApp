@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddFile = ({ option, setModalFile, noteId, setRefresh }) => {
+const AddFile = ({ option, setModalFile, noteId, setRefresh,setFiles }) => {
   const filesElement = useRef(null);
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState("");
@@ -51,7 +51,9 @@ const AddFile = ({ option, setModalFile, noteId, setRefresh }) => {
     const token = localStorage.getItem("token");
     api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
     const res = await api.post(`/api/files/${noteId}`, dataForm);
-    // console.log(dataForm);
+    const files = await api.get(`/api/files/${noteId}`);
+    setFiles(files.data);
+    // console.log(res);
   };
 
   const handleClose = () => {
@@ -79,6 +81,7 @@ const AddFile = ({ option, setModalFile, noteId, setRefresh }) => {
               sendFile();
               event.preventDefault();
               setRefresh(true);
+              
               setTitle("");
               handleClose();
             }
