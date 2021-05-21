@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -178,7 +178,7 @@ export default function FullScreenDialog({
                       setModalAddFile(true);
                     }}
                   >
-                   < VerticalAlignBottomIcon/>
+                   < AttachFileIcon/>
                    
                   </Button>
                   
