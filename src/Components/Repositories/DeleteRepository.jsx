@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import checkDescription from "../../Utils/CheckDescription";
 import checkTitle from "../../Utils/CheckTitle";
 import api from "../../Services/api";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Modal, TextField, Typography, Button } from "@material-ui/core";
@@ -67,8 +68,13 @@ const handleSubmit=async(ev)=>{
   };
 
   return (
-    <Modal open={open} onClose={handleClose} className={classes.modal}>
+    <Modal open={open} onClose={handleClose} className={classes.modal} disableBackdropClick="false">
       <div className={classes.paper}>
+      <Typography variant="h6" align="right" id="title">
+          <Button onClick={handleClose} >
+            <CloseIcon />
+          </Button>
+        </Typography>
         <Typography variant="h6" align="center" id="title">
           Excluir Repositório!
         </Typography>

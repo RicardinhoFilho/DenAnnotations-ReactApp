@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-
+import trashImage from "../../Assets/Trash.svg";
 import api from "../../Services/api";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -84,7 +84,7 @@ export default function ModalFile({ option, setModalFile, file, setRefresh }) {
         Após a exclusão deste anexo, não será possivel recupera-lo!
       </Typography> :  ""}
           <Button
-            variant="contained"
+            
             color="secondary"
             id="button"
             className={classes.button}
@@ -102,7 +102,7 @@ export default function ModalFile({ option, setModalFile, file, setRefresh }) {
               }
             }}
           >
-            Deletar Anexo
+            <img src={trashImage} alt="Deletar Anexo"/>
           </Button>
           <Button
             type="submit"

@@ -13,7 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
-
+import VerticalAlignBottomIcon from '@material-ui/icons/VerticalAlignBottom';
 import ModalFile from "./ModalFile";
 
 import { useHistory } from "react-router-dom";
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     height: "50px",
   },
   footer: {
-    marginTop: "50px",
+    //marginTop: "50px",
     backgroundColor: "#d3d3d3",
   },
   linkDiv: {
@@ -168,16 +168,7 @@ export default function FullScreenDialog({
           ) : (
             ""
           )}
-          <Divider />
-          <div className={classes.annotation}>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: note.annotation,
-              }}
-            ></div>
-          </div>
-         
-          <ListItem className={classes.footer}>
+           <ListItem className={classes.footer}>
             <ListItemText
               primary={
                 <div>
@@ -187,8 +178,10 @@ export default function FullScreenDialog({
                       setModalAddFile(true);
                     }}
                   >
-                    <img src={plusImage} className={classes.imageButtons} />
+                   < VerticalAlignBottomIcon/>
+                   
                   </Button>
+                  
                   {files.length > 0 
                     ? files.map((item) => (
                         <div className={classes.linkDiv}>
@@ -212,6 +205,16 @@ export default function FullScreenDialog({
               }
             />
           </ListItem>
+          <Divider />
+          <div className={classes.annotation}>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: note.annotation,
+              }}
+            ></div>
+          </div>
+         
+         
         </List>
       </Dialog>
       <AddFile

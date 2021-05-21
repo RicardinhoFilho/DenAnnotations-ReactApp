@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-
+import CloseIcon from "@material-ui/icons/Close";
 import checkDescription from "../../Utils/CheckDescription";
 import checkTitle from "../../Utils/CheckTitle";
 import api from "../../Services/api";
+
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Modal, TextField, Typography, Button } from "@material-ui/core";
@@ -47,8 +48,13 @@ export default function AddRepository({ option, setModalAdd, setRefresh }) {
   };
 
   return (
-    <Modal open={open} onClose={handleClose} className={classes.modal}>
+    <Modal open={open} onClose={handleClose} className={classes.modal}  disableBackdropClick="false">
       <div className={classes.paper}>
+      <Typography variant="h6" align="right" id="title">
+          <Button onClick={handleClose} >
+            <CloseIcon />
+          </Button>
+        </Typography>
         <Typography variant="h6" align="center" id="title">
           Adicionar Repositório!
         </Typography>

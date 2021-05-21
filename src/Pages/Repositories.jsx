@@ -10,6 +10,8 @@ import {
   FormControlLabel,
 } from "@material-ui/core";
 
+import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
+
 import AddRepository from "../Components/Repositories/AddRepository";
 import DeleteRepository from "../Components/Repositories/DeleteRepository";
 import UpdateRepository from "../Components/Repositories/UpdateRepository";
@@ -21,7 +23,7 @@ import trashImage from "../Assets/Trash.svg";
 import editImage from "../Assets/Edit.svg";
 import loginImage from "../Assets/login.jpg";
 
-import Loading from "../Components/Loading"
+import Loading from "../Components/Loading";
 
 import api from "../Services/api";
 
@@ -33,8 +35,8 @@ const Repositories = () => {
   const [modalDelete, setModalDelete] = useState(false);
   const [modalUpdate, setModalUpdate] = useState(false);
   const [rep, setRep] = useState([]);
-  const[feedback, setFeedback] = useState("");
-  const[refresh, setRefresh] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [refresh, setRefresh] = useState(false);
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -65,11 +67,10 @@ const Repositories = () => {
       display: "flex",
       justifyContent: "space-around",
     },
-    repImage:{
-      width:"200px",
-      height:"100px"
+    repImage: {
+      width: "200px",
+      height: "100px",
     },
-    
   }));
 
   function handleShowDescription() {
@@ -101,13 +102,13 @@ const Repositories = () => {
         try {
           api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
           const result = await api.get("/api/repositories");
-         
+
           setData(result.data);
-          setRefresh(false)
+          setRefresh(false);
         } catch {
           history.push("/login");
         }
-      }else{
+      } else {
         history.push("/login");
       }
     }
@@ -118,8 +119,7 @@ const Repositories = () => {
   }, [refresh]);
 
   if (loading) {
-
-    <Loading/>
+    <Loading />;
   }
 
   return (
@@ -141,7 +141,7 @@ const Repositories = () => {
             onClick={() => handleModalAddOpen()}
             control={
               <Button primary>
-                <img src={plusImage} className={classes.plus} />
+                <CreateNewFolderIcon color="primary" />
               </Button>
             }
           />
@@ -160,7 +160,6 @@ const Repositories = () => {
           {data.map((item) => (
             <Link className={classes.link} to={`/notes/${item.id}`}>
               <ListItemLink key={item.id} className={classes.item}>
-               
                 <Typography
                   variant="h4"
                   component="h2"
@@ -197,7 +196,11 @@ const Repositories = () => {
             </Link>
           ))}
         </List>
-        <AddRepository option={modalAdd} setModalAdd={setModalAdd} setRefresh={setRefresh}/>
+        <AddRepository
+          option={modalAdd}
+          setModalAdd={setModalAdd}
+          setRefresh={setRefresh}
+        />
         <DeleteRepository
           option={modalDelete}
           rep={rep}

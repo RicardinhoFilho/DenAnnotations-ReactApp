@@ -6,6 +6,7 @@ import api from "../../Services/api";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Modal, TextField, Typography, Button } from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -63,8 +64,13 @@ export default function UpdateRepository({ option, rep, setModalUpdate, setRefre
   };
 
   return (
-    <Modal open={open} onClose={handleClose} className={classes.modal}>
+    <Modal open={open} onClose={handleClose} className={classes.modal} disableBackdropClick="false">
       <div className={classes.paper}>
+      <Typography variant="h6" align="right" id="title">
+          <Button onClick={handleClose} >
+            <CloseIcon />
+          </Button>
+        </Typography>
         <Typography variant="h6" align="center" id="title">
           Editar Repositório!
         </Typography>

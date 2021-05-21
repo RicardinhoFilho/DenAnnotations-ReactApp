@@ -3,44 +3,58 @@ import React, { useState, useEffect, useRef } from "react";
 import checkDescription from "../../Utils/CheckDescription";
 import checkTitle from "../../Utils/CheckTitle";
 import api from "../../Services/api";
-
+import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
-import { Modal, TextField, Typography, Button,MuiTabScrollButton,Tabs } from "@material-ui/core";
+import {
+  Modal,
+  TextField,
+  Typography,
+  Button,
+  MuiTabScrollButton,
+  Tabs,
+} from "@material-ui/core";
 
+import CheckIcon from "@material-ui/icons/Check";
 import JoditEditor from "jodit-react";
 const useStyles = makeStyles((theme) => ({
   modal: {
     textAlign: "center",
     justifyContent: "right",
-    display:"block"
+    display: "block",
   },
 
   paper: {
-    maxWidth:1000,
+    maxWidth: 1000,
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     margin: "auto",
     marginTop: "8vw",
-    overflowY: "initial"
+    overflowY: "initial",
   },
-  form:{
+  form: {
     maxHeight: "30vw",
-    overflowY: "auto"
+    overflowY: "auto",
   },
   button: {
+    position: "flex",
     backgroundColor: "#FFFF00",
     opacity: ["0.8"].join(","),
     "&:hover": {
       backgroundColor: "#FFFF00",
       opacity: "1",
     },
-  }
+  },
 }));
 
-export default function UpdateNote({ option, note, setModalUpdate, setRefresh,
-  setNote}) {
+export default function UpdateNote({
+  option,
+  note,
+  setModalUpdate,
+  setRefresh,
+  setNote,
+}) {
   const editor = useRef(null);
   const [content, setContent] = useState("");
 
@@ -63,110 +77,125 @@ export default function UpdateNote({ option, note, setModalUpdate, setRefresh,
       setTitle(note.title);
       setDescription(note.description);
       setAnnotation(note.annotation);
-      setContent((note.annotation))
+      setContent(note.annotation);
     }
   });
-  const handleSubmit = async() => {
-    await api.patch(`/api/note/${note.id}`, { title, description, annotation,setRefresh });
-    const id= note.id;
-    setNote({id,title, description, annotation, id})
+  const handleSubmit = async () => {
+    try {
+      if (titleError.isValid != false && descriptionError.isValid != false) {
+        const response = await api.patch(`/api/note/${note.id}`, {
+          title,
+          description,
+          annotation,
+          setRefresh,
+        });
+        handleClose();
+        setRefresh(true);
+
+        const id = note.id;
+        console.log(response.data);
+        setNote({ id, title, description, annotation, id });
+        setTitle("");
+        setAnnotation("");
+        setDescription("");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleClose = () => {
     setOpen(false);
     setModalUpdate(false);
   };
+  const editorRef = useRef(null);
 
   return (
     <>
-    <Modal open={open} onClose={handleClose} className={classes.modal} disableScrollLock={true}>
-      <div className={classes.paper}>
-        <Typography variant="h6" align="center" id="title">
-          Editar Repositório!
-        </Typography>
-        <form className={classes.form}
-          onSubmit={(event) => {
-            if (
-              titleError.isValid != false &&
-              descriptionError.isValid != false
-            ) {
-              handleSubmit();
-              event.preventDefault();
-              handleClose()
-              setRefresh(true);
-              setTitle("");
-              setAnnotation("");
-              setDescription("");
-            } else {
-              event.preventDefault();
-            }
-          }}
-        >
-          <TextField
-            label="Título"
-            margin="normal"
-            value={title}
-            required
-            onBlur={(event) => {
-              if (typeof title !== "object") {
-                const isValid = checkTitle(title);
+      <Modal
+        open={open}
+        onClose={handleClose}
+        className={classes.modal}
+        disableBackdropClick="false"
+      >
+        <div className={classes.paper}>
+          <Typography variant="h6" align="right" id="title">
+            <Button
+              type="submit"
+              variant="contained"
+              id="button"
+              className={classes.button}
+              onClick={handleSubmit}
+            >
+              Confirmar
+              <CheckIcon />
+            </Button>
+            <Button onClick={handleClose}>
+              Cancelar
+              <CloseIcon />
+            </Button>
+          </Typography>
+          <Typography variant="h6" align="center" id="title">
+            Editar Repositório!
+          </Typography>
+          <form className={classes.form}>
+            <TextField
+              label="Título"
+              margin="normal"
+              value={title}
+              required
+              onBlur={(event) => {
+                if (typeof title !== "object") {
+                  const isValid = checkTitle(title);
 
-                setTitleError(isValid);
-              }
-            }}
-            error={titleError.error}
-            helperText={titleError.msg}
-            onChange={(event) => {
-              setTitle(event.target.value);
-            }}
-          />
-          <br />
-          <TextField
-            label="Descrição"
-            margin="normal"
-            value={description}
-            onBlur={(event) => {
-              if (typeof description !== "object") {
-                const isValid = checkDescription(description);
-                setDescriptionError(isValid);
-              }
-            }}
-            error={descriptionError.error}
-            helperText={descriptionError.msg}
-            onChange={(event) => {
-              setDescription(event.target.value);
-            }}
-          />
-          <br />
-          <br />
-          <br />
-          <br />
-          
-          <JoditEditor
-            ref={editor}
-            value={content}
-            config={config}
-            tabIndex={0} // tabIndex of textarea
-            onBlur={(newContent) => setAnnotation(newContent)} // preferred to use only this option to update the content for performance reasons
-            className={classes.editor}
-          />
-          
-          <br />
-          <br />
-          <br /> <br />
-          <Button
-            type="submit"
-            variant="contained"
-            id="button"
-            className={classes.button}
-          >
-            Confirmar
-          </Button>
-        </form>
-      </div>
-     
-      
-    </Modal>
+                  setTitleError(isValid);
+                }
+              }}
+              error={titleError.error}
+              helperText={titleError.msg}
+              onChange={(event) => {
+                setTitle(event.target.value);
+              }}
+            />
+            <br />
+            <TextField
+              label="Descrição"
+              margin="normal"
+              value={description}
+              onBlur={(event) => {
+                if (typeof description !== "object") {
+                  const isValid = checkDescription(description);
+                  setDescriptionError(isValid);
+                }
+              }}
+              error={descriptionError.error}
+              helperText={descriptionError.msg}
+              onChange={(event) => {
+                setDescription(event.target.value);
+              }}
+            />
+            <br />
+            <br />
+            <br />
+            <br />
+            <JoditEditor
+              //ref={editor}
+              value={content}
+              //config={this.config}
+              tabIndex={-1} // tabIndex of textarea
+              onChange={(newContent) => {
+                const text = newContent + " "; //Como o Jodit não percebe diferença em uma colagem toda vez que houver colagem ele irá adicionar um espaço, desta forma perceberá a diferença
+                setAnnotation(text);
+              }} // preferred to use only this option to update the content for performance reasons
+              // onChange={(newContent) => setAnnotation(newContent + "")}
+              className={classes.editor}
+            />
+            <br />
+            <br />
+            <br /> <br />
+          </form>
+        </div>
+      </Modal>
     </>
   );
 }
